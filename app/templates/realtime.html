@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time IoT Data</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f4f4f4; text-align: center; padding: 20px; }
+        h1 { color: #333; }
+        table { margin: auto; border-collapse: collapse; width: 60%; background: white; }
+        th, td { border: 1px solid #ccc; padding: 10px; }
+        th { background: #007BFF; color: white; }
+    </style>
+</head>
+<body>
+    <h1>🌡 Real-Time Sensor Data</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Temperature (°C)</th>
+                <th>Humidity (%)</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="data-table">
+            <tr><td colspan="3">Loading...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        function fetchData() {
+            fetch('/get-data')
+                .then(response => response.json())
+                .then(data => {
+                    let tableBody = document.getElementById('data-table');
+                    tableBody.innerHTML = '';
+
+                    data.data.forEach(row => {
+                        let tr = document.createElement('tr');
+                        tr.innerHTML = `<td>${row.temperature}</td><td>${row.humidity}</td><td>${row.timestamp}</td>`;
+                        tableBody.appendChild(tr);
+                    });
+                })
+                .catch(err => console.error(err));
+        }
+
+        setInterval(fetchData, 2000); // Fetch every 2 sec
+        fetchData(); // First load
+    </script>
+</body>
+</html>
